@@ -1,15 +1,16 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import filters
 from .permissions import IsOwner
-from posts.models import Group, Post, Follow
+from rest_framework.permissions import IsAuthenticated
+from posts.models import Group, Post, Follow, User
 
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer, FollowSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwner, IsAuthenticated]
+    permission_classes = [IsOwner, ]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -23,7 +24,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwner, IsAuthenticated]
+    permission_classes = [IsOwner, ]
     serializer_class = CommentSerializer
 
     def get_queryset(self):
@@ -38,6 +39,15 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class FollowViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwner, IsAuthenticated]
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, )
+    search_fields = ['user__username', 'following__username']
+    queryset = Follow.objects.all()
+    permission_classes = [IsAuthenticated, ]
     serializer_class = FollowSerializer
 
+    def get_queryset(self):
+        return self.request.user.follower.all()
+
+    def perform_create(self, serializer):
+        user = get_object_or_404(User, username=self.request.data['following'])
+        serializer.save(user=self.request.user, following=user)
