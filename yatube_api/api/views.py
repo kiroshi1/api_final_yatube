@@ -6,7 +6,9 @@ from .permissions import IsOwner
 from rest_framework.permissions import IsAuthenticated
 from posts.models import Group, Post, Follow, User
 
-from .serializers import CommentSerializer, GroupSerializer, PostSerializer, FollowSerializer
+from .serializers import (
+    CommentSerializer, GroupSerializer,
+    PostSerializer, FollowSerializer)
 
 
 class PostViewSet(viewsets.ModelViewSet):
