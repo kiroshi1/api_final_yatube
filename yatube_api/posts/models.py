@@ -14,12 +14,12 @@ class Group(models.Model):
 
 
 class Post(models.Model):
+    text = models.TextField()
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='posts'
     )
-    text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     image = models.ImageField(
         upload_to='posts/',
