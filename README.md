@@ -35,9 +35,11 @@ python manage.py runserver
 
 
 ### Примеры запросов:
-GET api/v1/posts/
+- GET api/v1/posts/
+
 Возвращает список всех постов.
 
+```
 [
   {
     "id": 0,
@@ -48,17 +50,19 @@ GET api/v1/posts/
     "group": 0
   }
 ]
+```
 
-POST api/v1/posts/
+- POST api/v1/posts/
+
 Создаёт пост, если вы в теле запроса передаёте переменную "text": "string",
 возвращает созданный пост, где в кач-ве автора указан юзер, отправивший запрос.
-
+```
 "id": 0,
 "author": "string",
 "text": "string",
 "pub_date": "2019-08-24T14:15:22Z",
 "image": "string",
 "group": 0
-
+```
 ### Разработчик
 Denis Razgonyaev
